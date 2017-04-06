@@ -4,6 +4,7 @@
 */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "dlist_node.h"
 // create (i.e., malloc) a new node
 dlist_node* new_node(int data, dlist_node* next, dlist_node* prev)
@@ -12,12 +13,12 @@ dlist_node* new_node(int data, dlist_node* next, dlist_node* prev)
   n->data = data;
   n->next = next;
   n->prev = prev;
-  if (n->prev != NULL){
+  /*if (n->prev != NULL){
     n->prev->next = n;
   }
   if (n->next != NULL){
     n->next->prev = n;
-  }
+    }*/
   return n;
 
 }
@@ -26,7 +27,13 @@ dlist_node* new_node(int data, dlist_node* next, dlist_node* prev)
 // Precondition: Supplied node is not NULL.
 void insert_after(dlist_node* n, int data)
 {
-  if (n->prev == NULL && n->next == NULL){ //only node in the list
+  n->next = new_node(data, n->next, n);
+  if (n->next->next != NULL)
+    {
+      n->next->next->prev=n->next;
+    }
+
+  /* if (n->prev == NULL && n->next == NULL){ //only node in the list
       n->next = new_node(data, n->next, n);
   }
   else if (n->prev == NULL){ //if node is in the front
@@ -39,7 +46,7 @@ void insert_after(dlist_node* n, int data)
     dlist_node* delendum = new_node(data, n->next, n);
     delendum = n->next->prev;
     delendum = n2 -> prev;
-    }
+    }*/
 }
 
 
@@ -48,9 +55,9 @@ void insert_after(dlist_node* n, int data)
 void insert_before(dlist_node* n, int data)
 {
   n->prev = new_node(data, n, n->prev);
-  /*if (n->prev->prev != NULL) {
+  if (n->prev->prev != NULL) {
     n->prev->prev->next = n->prev;
-    }*/
+    }
 }
 
 
@@ -58,24 +65,25 @@ void insert_before(dlist_node* n, int data)
 // Precondition: Supplied node is not NULL.
 void delete_node(dlist_node* n)
 {
+  dlist_node* delendum = n->next;
   if (n->prev == NULL && n->next == NULL){ //only node in the list
     free(n);
   }
   else if (n->prev == NULL){ //if node is in the front
-    dlist_node* delendum = n->next;
     delendum->prev = NULL;
-    free(delendum->prev);
+    // free(delendum->prev);
   }
   else if (n->next == NULL){ //if node is in the back
     dlist_node* delendum = n->prev;
-      delendum->next = NULL;
-      free(delendum->next);
+    delendum->next = NULL;
+    //free(delendum->next);
   } else { //if node is in the middle
     dlist_node* delendum = n->next;
     n->next = n->prev->next;
     n->prev = n->next->prev;
-    free(delendum);
   }
+  free(delendum);
+
 }
 
 

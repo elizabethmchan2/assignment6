@@ -97,18 +97,18 @@ int dlist_peek_end(dlist l)
 void dlist_insert(dlist l, int n, int elt)
 {
   int len = dlist_size(l);
-  if(n == 0)
+   if(n == 0)
   {
     dlist_push(l, elt);
   }
-  else if (len/2 < n )
+   else if (n < (len-n) )
   {
     dlist_node* one_before = nth_node(l->head, n-1);
     insert_after(one_before, elt);
     l->size++;
   }
   else {
-    dlist_node* one_before = nth_node_prev(l->tail, n-1);
+    dlist_node* one_before = nth_node_prev(l->tail, len - n);
     insert_after(one_before, elt);
     l->size++;
   }
